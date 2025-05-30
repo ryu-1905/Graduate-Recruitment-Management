@@ -17,7 +17,6 @@ public class NormalStudent extends Student {
         setEntryTestScore(entryTestScore);
     }
 
-    // Implement showInfo để in chi tiết NormalStudent
     @Override
     public void showInfo() {
         System.out.println("""
@@ -56,7 +55,8 @@ public class NormalStudent extends Student {
 
     public void setEntryTestScore(double entryTestScore) {
         if (entryTestScore < 0.0 || entryTestScore > 10.0) {
-            throw new IllegalArgumentException("Input files have unknow errors!");
+            throw new IllegalArgumentException(
+                    "Entry test score must be between 0.0 and 10.0. -> " + entryTestScore);
         }
         this.entryTestScore = entryTestScore;
     }

@@ -3,7 +3,7 @@ package main;
 import main.student.Student;
 
 public class App {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         StudentRecruitment studentRecruitment = new StudentRecruitment();
         studentRecruitment.showListStudent();
 

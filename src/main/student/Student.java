@@ -16,7 +16,7 @@ public abstract class Student {
     protected String universityName;
     protected String gradeLevel;
 
-    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Student(String fullName, String doBString, String sex, String phoneNumber, String universityName,
             String gradeLevel) throws InvalidFullNameException, InvalidDOBException, InvalidPhoneNumberException {
@@ -63,7 +63,7 @@ public abstract class Student {
         try {
             this.doB = LocalDate.parse(doBString.trim(), DTF);
         } catch (DateTimeParseException e) {
-            throw new InvalidDOBException("DOB must be in format dd/MM/yyyy.");
+            throw new InvalidDOBException(e.getMessage());
         }
     }
 

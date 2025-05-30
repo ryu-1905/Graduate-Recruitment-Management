@@ -9,6 +9,17 @@ import main.student.NormalStudent;
 import main.student.Student;
 
 public class StudentRecruitment {
+    enum Path {
+        GOOD_STUDENT("csv/goodStudent.csv"),
+        NORMAL_STUDENT("csv/normalStudent.csv");
+
+        public final String path;
+
+        Path(String path) {
+            this.path = path;
+        }
+    }
+
     private List<Student> allStudents = new ArrayList<>();
     private List<GoodStudent> goodStudents = new ArrayList<>();
     private List<NormalStudent> normalStudents = new ArrayList<>();
@@ -17,15 +28,15 @@ public class StudentRecruitment {
     public void showListStudent() {
         try {
             System.out.println("\n===== Danh sách GoodStudent =====");
-            goodStudents = studentFileReader.readGoodStudents("goodStudent.csv");
+            goodStudents = studentFileReader.readGoodStudents(Path.GOOD_STUDENT.path);
             goodStudents.forEach(GoodStudent::showInfo);
 
             System.out.println("\n===== Danh sách NormalStudent =====");
-            normalStudents = studentFileReader.readNormalStudents("normalStudent.csv");
+            normalStudents = studentFileReader.readNormalStudents(Path.NORMAL_STUDENT.path);
             normalStudents.forEach(NormalStudent::showInfo);
 
         } catch (Exception e) {
-            System.err.println("Input files have unknow errors!");
+            System.err.println(e.getMessage());
         }
     }
 
@@ -33,8 +44,8 @@ public class StudentRecruitment {
         List<Student> selectedList = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(System.in)) {
-            goodStudents = studentFileReader.readGoodStudents("goodStudent.csv");
-            normalStudents = studentFileReader.readNormalStudents("normalStudent.csv");
+            goodStudents = studentFileReader.readGoodStudents(Path.GOOD_STUDENT.path);
+            normalStudents = studentFileReader.readNormalStudents(Path.NORMAL_STUDENT.path);
 
             int number;
 
@@ -52,12 +63,12 @@ public class StudentRecruitment {
 
             // If goodStudents enough or more, select from goodStudents
             if (goodStudents.size() >= number) {
-                ArrayList<GoodStudent> tempGood = new ArrayList<>(goodStudents);
-                tempGood.sort(Comparator
+                ArrayList<GoodStudent> tempGoods = new ArrayList<>(goodStudents);
+                tempGoods.sort(Comparator
                         .comparingDouble(GoodStudent::getGpa).reversed()
                         .thenComparing(GoodStudent::getFullName, String.CASE_INSENSITIVE_ORDER));
 
-                selectedList.addAll(tempGood.subList(0, number));
+                selectedList.addAll(tempGoods.subList(0, number));
                 return selectedList;
             }
 
@@ -67,19 +78,17 @@ public class StudentRecruitment {
 
             int remaining = number - selectedList.size();
 
-            List<NormalStudent> tempNormal = new ArrayList<>(normalStudents);
-            tempNormal.sort(Comparator
+            List<NormalStudent> tempNormals = new ArrayList<>(normalStudents);
+            tempNormals.sort(Comparator
                     .comparingDouble(NormalStudent::getEntryTestScore).reversed()
                     .thenComparing(Comparator.comparingInt(NormalStudent::getEnglishScore).reversed())
                     .thenComparing(NormalStudent::getFullName, String.CASE_INSENSITIVE_ORDER));
 
             // fill remaining candidates from normalStudents
-            tempNormal.stream()
-                    .limit(remaining)
-                    .forEach(selectedList::add);
+            tempNormals.subList(0, remaining).forEach(tempNormal -> selectedList.add((Student) tempNormal));
 
         } catch (Exception e) {
-            System.err.println("Input files have unknow errors!");
+            System.err.println(e.getMessage());
         }
         return selectedList;
     }
@@ -88,8 +97,8 @@ public class StudentRecruitment {
         System.out.println("===== Danh sách tất cả sinh viên =====");
 
         try {
-            goodStudents = studentFileReader.readGoodStudents("goodStudent.csv");
-            normalStudents = studentFileReader.readNormalStudents("normalStudent.csv");
+            goodStudents = studentFileReader.readGoodStudents(Path.GOOD_STUDENT.path);
+            normalStudents = studentFileReader.readNormalStudents(Path.NORMAL_STUDENT.path);
             allStudents.addAll(goodStudents);
             allStudents.addAll(normalStudents);
         } catch (Exception e) {
@@ -97,7 +106,7 @@ public class StudentRecruitment {
         }
 
         List<Student> tempAllStudent = new ArrayList<>(allStudents);
-        allStudents.sort(Comparator
+        tempAllStudent.sort(Comparator
                 .comparing(Student::getFullName, String.CASE_INSENSITIVE_ORDER).reversed()
                 .thenComparing(Student::getPhoneNumber));
 

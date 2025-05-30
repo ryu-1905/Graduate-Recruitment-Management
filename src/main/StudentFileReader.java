@@ -18,6 +18,7 @@ public class StudentFileReader {
         var list = new ArrayList<GoodStudent>();
 
         List<String> lines = Files.readAllLines(Path.of(filePath));
+        lines.remove(0); // Remove header line if exists
         for (String line : lines) {
             if (line.isBlank()) {
                 continue;
@@ -27,7 +28,6 @@ public class StudentFileReader {
 
             GoodStudent goodStudent;
             try {
-                double gpa = Double.parseDouble(columns[6]);
                 goodStudent = new GoodStudent(
                         columns[0], // fullName
                         columns[1], // doB
@@ -35,11 +35,11 @@ public class StudentFileReader {
                         columns[3], // phoneNumber
                         columns[4], // universityName
                         columns[5], // gradeLevel
-                        gpa, // gpa
+                        Double.parseDouble(columns[6]), // gpa
                         columns[7] // bestRewardName
                 );
             } catch (Exception e) {
-                throw new IOException("Input files have unknow errors!");
+                throw new IOException(e.getMessage());
             }
 
             list.add(goodStudent);
@@ -51,6 +51,7 @@ public class StudentFileReader {
         var list = new ArrayList<NormalStudent>();
 
         List<String> lines = Files.readAllLines(Path.of(filePath));
+        lines.remove(0); // Remove header line if exists
         for (String line : lines) {
             if (line.isBlank()) {
                 continue;
@@ -70,7 +71,7 @@ public class StudentFileReader {
                         Double.parseDouble(columns[7]) // entryTestScore
                 );
             } catch (Exception e) {
-                throw new IOException("Input files have unknow errors!");
+                throw new IOException(e.getMessage());
             }
 
             list.add(normalStudent);
