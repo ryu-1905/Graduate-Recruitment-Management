@@ -36,7 +36,7 @@ public class StudentRecruitment {
             normalStudents.forEach(NormalStudent::showInfo);
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println("Input files have unknow errors!");
         }
     }
 
@@ -88,7 +88,7 @@ public class StudentRecruitment {
             tempNormals.subList(0, remaining).forEach(tempNormal -> selectedList.add((Student) tempNormal));
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println("Input files have unknow errors!");
         }
         return selectedList;
     }
